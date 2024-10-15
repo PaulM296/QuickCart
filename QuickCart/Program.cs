@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using QuickCart.Domain.Interfaces;
 using QuickCart.Infrastructure.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +16,8 @@ builder.Services.AddDbContext<QuickCartDbContext>(opt =>
     opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -29,5 +32,14 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+try
+{
+    using var scope = app.Services.CreateScope();
+}
+catch(SystemException)
+{
+    throw;
+}
 
 app.Run();
