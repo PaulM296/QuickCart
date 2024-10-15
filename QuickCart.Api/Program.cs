@@ -36,9 +36,14 @@ app.MapControllers();
 try
 {
     using var scope = app.Services.CreateScope();
+    var services = scope.ServiceProvider;
+    var context = services.GetRequiredService<QuickCartDbContext>();
+    await context.Database.MigrateAsync();
+    await StoreContextSeed.SeedAsync(context);
 }
-catch(SystemException)
+catch(Exception ex)
 {
+    Console.WriteLine(ex);
     throw;
 }
 
