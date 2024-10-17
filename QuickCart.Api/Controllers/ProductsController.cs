@@ -11,10 +11,10 @@ namespace QuickCart.Api.Controllers
     {
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Product>>> GetProducts(string? brand,
-            string? type, string? sort)
+        public async Task<ActionResult<IEnumerable<Product>>> GetProducts(
+            [FromQuery]ProductSpecParams specParams)
         {
-            var spec = new ProductSpecification(brand, type, sort);
+            var spec = new ProductSpecification(specParams);
 
             var products = await repo.ListAsync(spec);
 
