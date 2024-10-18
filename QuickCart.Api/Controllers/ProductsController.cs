@@ -1,13 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using QuickCart.Api.RequestHelpers;
 using QuickCart.Domain.Entities;
 using QuickCart.Domain.Interfaces;
 using QuickCart.Domain.Specifications;
 
 namespace QuickCart.Api.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class ProductsController(IBaseRepository<Product> repo) : ControllerBase
+    public class ProductsController(IBaseRepository<Product> repo) : BaseApiController
     {
 
         [HttpGet]
@@ -16,9 +15,7 @@ namespace QuickCart.Api.Controllers
         {
             var spec = new ProductSpecification(specParams);
 
-            var products = await repo.ListAsync(spec);
-
-            return Ok(products);
+            return await CreatePagedResult(repo, spec, specParams.PageIndex, specParams.PageSize);
         }
 
         [HttpGet("{id:int}")]
