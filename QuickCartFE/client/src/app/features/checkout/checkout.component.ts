@@ -1,4 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { AccountService } from '../../core/services/account.service';
+import { Router } from '@angular/router';
+import { CartService } from '../../core/services/cart.service';
 
 @Component({
   selector: 'app-checkout',
@@ -8,5 +11,5 @@ import { Component } from '@angular/core';
   styleUrl: './checkout.component.scss'
 })
 export class CheckoutComponent {
-
+  
 }

@@ -32,7 +32,8 @@ export class LoginComponent {
     const url = this.activatedRoute.snapshot.queryParams['returnUrl'];
     if(url) 
       this.returnUrl = url;
- }
+  }
+  
   loginForm = this.fb.group({
     email: [''],
     password: ['']
