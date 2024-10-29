@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using QuickCart.Api.DTOs;
+using QuickCart.Api.Extensions;
 using QuickCart.Domain.Entities;
 using System.Security.Claims;
 
@@ -44,11 +45,7 @@ namespace QuickCart.Api.Controllers
             if (User.Identity?.IsAuthenticated == false)
                 return NoContent();
 
-            var user = await signInManager.UserManager.Users.
-                FirstOrDefaultAsync(x => x.Email == User.FindFirstValue(ClaimTypes.Email));
-        
-            if(user == null) 
-                return Unauthorized();
+            var user = await signInManager.UserManager.GetUserByEmail(User);
 
             return Ok(new
             {
