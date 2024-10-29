@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using QuickCart.Api.Middleware;
+using QuickCart.Domain.Entities;
 using QuickCart.Domain.Interfaces;
 using QuickCart.Infrastructure.Data;
 using QuickCart.Infrastructure.Services;
@@ -33,6 +34,10 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(config =>
     return ConnectionMultiplexer.Connect(configuration);
 });
 builder.Services.AddSingleton<ICartService, CartService>();
+builder.Services.AddAuthorization();
+builder.Services.AddIdentityApiEndpoints<AppUser>()
+    .AddEntityFrameworkStores<QuickCartDbContext>();
+
 
 var app = builder.Build();
 
@@ -53,6 +58,8 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapGroup("api").MapIdentityApi<AppUser>();
 
 try
 {

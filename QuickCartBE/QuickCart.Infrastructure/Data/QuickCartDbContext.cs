@@ -1,10 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using QuickCart.Domain.Entities;
 using QuickCart.Infrastructure.Configurations;
 
 namespace QuickCart.Infrastructure.Data
 {
-    public class QuickCartDbContext(DbContextOptions options) : DbContext(options)
+    public class QuickCartDbContext(DbContextOptions options) : IdentityDbContext<AppUser>(options)
     {    
         public DbSet<Product> Products { get; set; }
 
