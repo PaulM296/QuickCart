@@ -8,6 +8,8 @@ import { MatProgressBar } from '@angular/material/progress-bar';
 import { Cart } from '../../shared/models/cart';
 import { CartService } from '../../core/services/cart.service';
 import { AccountService } from '../../core/services/account.service';
+import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
+import { MatDivider } from '@angular/material/divider';
 
 @Component({
   selector: 'app-header',
@@ -18,7 +20,11 @@ import { AccountService } from '../../core/services/account.service';
     MatBadge,
     RouterLink,
     RouterLinkActive,
-    MatProgressBar
+    MatProgressBar,
+    MatMenuTrigger,
+    MatMenu,
+    MatDivider,
+    MatMenuItem
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
