@@ -1,11 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using QuickCart.Api.DTOs;
 using QuickCart.Api.Extensions;
 using QuickCart.Domain.Entities;
-using System.Security.Claims;
 
 namespace QuickCart.Api.Controllers
 {
@@ -24,8 +22,15 @@ namespace QuickCart.Api.Controllers
 
             var result = await signInManager.UserManager.CreateAsync(user, registerDto.Password); 
 
-            if(!result.Succeeded) 
-                return BadRequest(result.Errors);
+            if(!result.Succeeded)
+            {
+                foreach(var error in result.Errors)
+                {
+                    ModelState.AddModelError(error.Code, error.Description);
+                }
+
+                return ValidationProblem();
+            }
 
             return Ok();
         }
