@@ -4,7 +4,7 @@ import { OrderSummaryComponent } from "../../shared/components/order-summary/ord
 import { RouterLink } from '@angular/router';
 import { MatButton } from '@angular/material/button';
 import { StripeService } from '../../core/services/stripe.service';
-import { StripeAddressElement, StripeAddressElementChangeEvent, StripePaymentElement, StripePaymentElementChangeEvent } from '@stripe/stripe-js';
+import { ConfirmationToken, StripeAddressElement, StripeAddressElementChangeEvent, StripePaymentElement, StripePaymentElementChangeEvent } from '@stripe/stripe-js';
 import { SnackbarService } from '../../core/services/snackbar.service';
 import { MatCheckboxChange, MatCheckboxModule } from '@angular/material/checkbox';
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
@@ -43,7 +43,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   saveAddress = false;
   completionStatus = signal<{address: boolean, card: boolean, delivery: boolean}>(
     {address: false, card: false, delivery: false}
-  )
+  );
+  confirmationToken?: ConfirmationToken;
 
   async ngOnInit() {
     try {
@@ -79,6 +80,21 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       return state;
     })
   }
+
+  async getConfirmationToken() {
+    try {
+      if(Object.values(this.completionStatus()).every(status => status === true)) {
+        const result = await this.stripeService.createConfirmationToken();
+        if(result.error)
+          throw new Error(result.error.message);
+
+        this.confirmationToken = result.confirmationToken;
+        console.log(this.confirmationToken);
+      }
+    } catch (error: any) {
+      this.snackbar.error(error.message);
+    }
+  }
   
   async onStepChange(event: StepperSelectionEvent) {
     if(event.selectedIndex === 1) {
@@ -87,10 +103,13 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         address && firstValueFrom(this.accountService.updateAddress(address));
       }
     }
-
+    
     if(event.selectedIndex === 2) {
       await firstValueFrom(this.stripeService.createOrUpdatePaymentIntent())
     }
+
+    if(event.selectedIndex === 3)
+      await this.getConfirmationToken();
   }
 
   private async getAddressFromStripeAddress(): Promise<Address | null> {
