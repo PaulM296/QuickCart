@@ -6,8 +6,7 @@ using Stripe;
 namespace QuickCart.Infrastructure.Services
 {
     public class PaymentService(IConfiguration config, ICartService cartService,
-        IBaseRepository<Domain.Entities.Product> productRepo,
-        IBaseRepository<DeliveryMethod> dmRepo) : IPaymentService
+        IUnitOfWork unitOfWork) : IPaymentService
     {
         public async Task<ShoppingCart?> CreateOrUpdatePaymentIntent(string cardId)
         {
@@ -21,7 +20,7 @@ namespace QuickCart.Infrastructure.Services
 
             if(cart.DeliveryMethodId.HasValue)
             {
-                var deliveryMethod = await dmRepo.GetByIdAsync((int)cart.DeliveryMethodId);
+                var deliveryMethod = await unitOfWork.Repository<DeliveryMethod>().GetByIdAsync((int)cart.DeliveryMethodId);
 
                 if (deliveryMethod == null)
                     return null;
@@ -31,7 +30,7 @@ namespace QuickCart.Infrastructure.Services
 
             foreach(var item in cart.Items)
             {
-                var productItem = await productRepo.GetByIdAsync(item.ProductId);
+                var productItem = await unitOfWork.Repository<Domain.Entities.Product>().GetByIdAsync(item.ProductId);
 
                 if (productItem == null)
                     return null;
