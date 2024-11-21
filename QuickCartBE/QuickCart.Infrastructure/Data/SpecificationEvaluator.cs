@@ -1,4 +1,5 @@
-﻿using QuickCart.Domain.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using QuickCart.Domain.Entities;
 using QuickCart.Domain.Interfaces;
 
 namespace QuickCart.Infrastructure.Data
@@ -31,6 +32,9 @@ namespace QuickCart.Infrastructure.Data
             {
                 query = query.Skip(spec.Skip).Take(spec.Take);
             }
+
+            query = spec.Includes.Aggregate(query, (current, include) => current.Include(include));
+            query = spec.IncludeStrings.Aggregate(query, (current, include) => current.Include(include));
 
             return query;
         }
