@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
+using QuickCart.Api.Extensions;
+using QuickCart.Api.SignalR;
 using QuickCart.Domain.Entities;
 using QuickCart.Domain.Entities.OrderAggregates;
 using QuickCart.Domain.Interfaces;
@@ -9,9 +12,10 @@ using Stripe;
 namespace QuickCart.Api.Controllers
 {
     public class PaymentsController(IPaymentService paymentService,
-        IUnitOfWork unitOfWork, ILogger<PaymentsController> logger) : BaseApiController
+        IUnitOfWork unitOfWork, ILogger<PaymentsController> logger,
+        IConfiguration config, IHubContext<NotificationHub> hubContext) : BaseApiController
     {
-        private readonly string _whSecret = "";
+        private readonly string _whSecret = config["StripeSettings:WhSecret"]!;
 
         [Authorize]
         [HttpPost("{cartId}")]
@@ -81,7 +85,12 @@ namespace QuickCart.Api.Controllers
 
                 await unitOfWork.Complete();
 
-                //TODO: SignalR
+                var connectionId = NotificationHub.GetConnectionIdByEmail(order.BuyerEmail);
+
+                if(!string.IsNullOrEmpty(connectionId))
+                {
+                    await hubContext.Clients.Client(connectionId).SendAsync("OrderCompleteNotification", order.ToDto());
+                }
             }
         }
 
