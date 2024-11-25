@@ -87,9 +87,10 @@ namespace QuickCart.Api.Controllers
 
                 var connectionId = NotificationHub.GetConnectionIdByEmail(order.BuyerEmail);
 
-                if(!string.IsNullOrEmpty(connectionId))
+                if (!string.IsNullOrEmpty(connectionId))
                 {
-                    await hubContext.Clients.Client(connectionId).SendAsync("OrderCompleteNotification", order.ToDto());
+                    await hubContext.Clients.Client(connectionId)
+                        .SendAsync("OrderCompleteNotification", order.ToDto());
                 }
             }
         }
@@ -98,12 +99,13 @@ namespace QuickCart.Api.Controllers
         {
             try
             {
-                return EventUtility.ConstructEvent(json, Request.Headers["Stripe-Signature"], _whSecret);
+                return EventUtility.ConstructEvent(json, Request.Headers["Stripe-Signature"],
+                    _whSecret);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                logger.LogError(ex, "Failed to construct stripe event.");
-                throw new StripeException("Invalid signature.");
+                logger.LogError(ex, "Failed to construct stripe event");
+                throw new StripeException("Invalid signature");
             }
         }
     }

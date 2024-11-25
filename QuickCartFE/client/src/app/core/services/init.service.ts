@@ -14,16 +14,15 @@ export class InitService {
 
   init() {
     const cartId = localStorage.getItem('cart_id');
-    const cart$ = cartId ? this.cartService.getCart(cartId) : of(null)
-    
+    const cart$ = cartId ? this.cartService.getCart(cartId) : of(null);
+
     return forkJoin({
       cart: cart$,
       user: this.accountService.getUserInfo().pipe(
         tap(user => {
-          if(user)
-            this.signalrService.createHubConnection();
+          if (user) this.signalrService.createHubConnection();
         })
       )
-    }); 
+    })
   }
 }
