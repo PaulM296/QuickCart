@@ -1,4 +1,5 @@
 ﻿using QuickCart.Domain.Entities;
+using System.Reflection;
 using System.Text.Json;
 
 namespace QuickCart.Infrastructure.Data
@@ -7,9 +8,12 @@ namespace QuickCart.Infrastructure.Data
     {
         public static async Task SeedAsync(QuickCartDbContext context)
         {
+            var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+
             if(!context.Products.Any())
             {
-                var productsData = await File.ReadAllTextAsync("../QuickCart.Infrastructure/Data/SeedData/products.json");
+                var productsData = await File
+                    .ReadAllTextAsync(path + @"/Data/SeedData/products.json");
 
                 var products = JsonSerializer.Deserialize<List<Product>>(productsData);
 
@@ -23,7 +27,8 @@ namespace QuickCart.Infrastructure.Data
 
             if (!context.DeliveryMethods.Any())
             {
-                var dmData = await File.ReadAllTextAsync("../QuickCart.Infrastructure/Data/SeedData/delivery.json");
+                var dmData = await File
+                    .ReadAllTextAsync(path + @"/Data/SeedData/delivery.json");
 
                 var methods = JsonSerializer.Deserialize<List<DeliveryMethod>>(dmData);
 

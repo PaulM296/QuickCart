@@ -23,7 +23,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\QuickCart.Core\QuickCart.Domain.csproj" />
+	<None Include="Data\SeedData\**" CopyToOutputDirectory="PreserveNewest" />
+    <ProjectReference Include="..\QuickCart.Domain\QuickCart.Domain.csproj" />
   </ItemGroup>
 
 </Project>
