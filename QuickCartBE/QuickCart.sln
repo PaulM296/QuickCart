@@ -5,7 +5,7 @@ VisualStudioVersion = 17.9.34723.18
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuickCart.Api", "QuickCart.Api\QuickCart.Api.csproj", "{3EC242AA-FB8C-4088-AE33-88E12E0D7CDB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuickCart.Domain", "QuickCart.Core\QuickCart.Domain.csproj", "{E3A6CF43-1546-496C-B716-E66BAAE14FDD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuickCart.Domain", "QuickCart.Domain\QuickCart.Domain.csproj", "{E3A6CF43-1546-496C-B716-E66BAAE14FDD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuickCart.Infrastructure", "QuickCart.Infrastructure\QuickCart.Infrastructure.csproj", "{90C39C34-9194-44C9-92E7-1AA311FBF54B}"
 EndProject
