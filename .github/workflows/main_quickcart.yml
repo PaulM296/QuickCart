@@ -14,7 +14,7 @@ jobs:
     runs-on: windows-latest
 
     env: 
-      PROJECT_PATH: ./QuickCart.Api
+      PROJECT_PATH: ./QuickCartBE/QuickCart.Api
 
     steps:
       - uses: actions/checkout@v4
